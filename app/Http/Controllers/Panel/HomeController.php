@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller {
-	public function index(Request $request) {
+	public function index() {
 		return view('panel.pages.home.index');
 	}
 }

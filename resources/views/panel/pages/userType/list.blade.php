@@ -18,7 +18,7 @@
 		@foreach ($table as $item)
 		<tr>
 			<th scope="row">{{ $item->id }}</th>
-			<td>{{ $item->permission }}</td>
+			<td>{{ $item->level }}</td>
 			<td>{{ $item->name }}</td>
 			<td>
 				@if (!$item->deleted_at)

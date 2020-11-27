@@ -25,11 +25,21 @@
 		</div>
 
 		<div class="col-4 form-group">
-			<label for="users_type_id">Tipo de Usuario</label>
-			<select name="users_type_id" id="users_type_id" class="form-control" @if (!authMenu('panel.user')) disabled @endif>
+			<label for="user_type_id">Tipo de Usuario</label>
+			<select name="user_type_id" id="user_type_id" class="form-control" @if (!authMenu('panel.user')) disabled @endif>
 				<option value=""></option>
-				@foreach ($selectBox['usersType'] as $item)
-				<option value="{{$item->id}}" @if(isset($form) && $item->id == $form->users_type_id) selected @endif>{{$item->name}}</option>
+				@foreach ($selectBox['userType'] as $item)
+				<option value="{{$item->id}}" @if(isset($form) && $item->id == $form->user_type_id) selected @endif>{{$item->name}}</option>
+				@endforeach
+			</select>
+		</div>
+
+		<div class="col-4 form-group">
+			<label for="user_type_id">Superior</label>
+			<select name="user_id" class="form-control" @if (!authMenu('panel.user')) disabled @endif>
+				<option value=""></option>
+				@foreach ($selectBox['higher'] as $item)
+				<option value="{{ $item->id }}" @if(isset($form) && $item->id == $form->user_id) selected @endif>{{ $item->name }}</option>
 				@endforeach
 			</select>
 		</div>
@@ -47,6 +57,8 @@
 		</div>
 	</div>
 
-	<button type="submit" class="btn btn-primary">Submit</button>
+	<div class="text-right">
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</div>
 </form>
 @endsection

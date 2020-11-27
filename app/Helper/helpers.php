@@ -10,7 +10,7 @@ function authMenu($route) {
 		'panel.user' => [99, 1, 2],
 	];
 
-	$permission = Auth::user()->userType->permission;
+	$level = Auth::user()->userType->level;
 
-	return isset($mapAuthMenu[$route]) ? in_array($permission, $mapAuthMenu[$route]) : false;
+	return isset($mapAuthMenu[$route]) ? in_array($level, $mapAuthMenu[$route]) : false;
 }

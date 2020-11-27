@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Models\UsersType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

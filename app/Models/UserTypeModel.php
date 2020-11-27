@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UsersType extends Model
+class UserTypeModel extends Model
 {
-    use HasFactory, SoftDeletes;
+	use HasFactory, SoftDeletes;
 
-    protected $table = 'users_type';
+	protected $table = 'user_type';
 
-    protected $fillable = [
-        'name',
-        'permission',
-    ];
+	protected $fillable = [
+		'name',
+		'level',
+	];
 }

@@ -9,9 +9,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 
-class User extends Authenticatable
+class UserModel extends Authenticatable
 {
 	use HasFactory, Notifiable, SoftDeletes;
+
+	protected $table = 'user';
 
 	/**
 	* The attributes that are mass assignable.
@@ -21,8 +23,9 @@ class User extends Authenticatable
 	protected $fillable = [
 		'name',
 		'email',
+		'user_id',
 		'password',
-		'users_type_id',
+		'user_type_id',
 	];
 
 	protected $appends = [ 'userType' ];
@@ -47,14 +50,18 @@ class User extends Authenticatable
 	];
 
 	protected function getUserTypeAttribute() {
-		return UsersType::find($this->attributes['users_type_id']);
+		return UserTypeModel::find($this->attributes['user_type_id']);
 	}
 
 	protected function setPasswordAttribute($value) {
 		$this->attributes['password'] = Hash::make($value);
 	}
 
-	public function usersType() {
-		return $this->belongsTo('App\Models\UsersType');
+	public function userType() {
+		return $this->belongsTo('App\Models\UserTypeModel');
+	}
+
+	public function user() {
+		return $this->belongsTo('App\Models\UserModel');
 	}
 }

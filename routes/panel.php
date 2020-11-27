@@ -13,11 +13,11 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('', 'HomeController@index')->name('.home');
 
 	Route::group(['prefix' => 'users_type', 'name' => '.userType'], function () {
-		Route::get('', 'UsersTypeController@list');
-		Route::get('form/{id?}', 'UsersTypeController@form');
-		Route::post('save', 'UsersTypeController@save');
-		Route::get('delete/{id}', 'UsersTypeController@delete');
-		Route::get('enable/{id}', 'UsersTypeController@enable');
+		Route::get('', 'UserTypeController@list');
+		Route::get('form/{id?}', 'UserTypeController@form');
+		Route::post('save', 'UserTypeController@save');
+		Route::get('delete/{id}', 'UserTypeController@delete');
+		Route::get('enable/{id}', 'UserTypeController@enable');
 	});
 
 	Route::group([ 'prefix' => 'user' ], function () {
