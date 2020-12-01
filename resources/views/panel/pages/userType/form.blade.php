@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="text-right py-2">
-	<a class="btn btn-info" href="/panel/users_type">Lista</a>
+	<a class="btn btn-info" href="/panel/user_type">Lista</a>
 </div>
 
-<form action="/panel/users_type/save" method="POST">
+<form action="/panel/user_type/save" method="POST">
 	@csrf
 	<input type="hidden" name="id" value="@isset($form->id){{$form->id}}@endisset">
 

@@ -12,7 +12,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('', 'HomeController@index')->name('.home');
 
-	Route::group(['prefix' => 'users_type', 'name' => '.userType'], function () {
+	Route::group(['prefix' => 'user_type', 'name' => '.userType'], function () {
 		Route::get('', 'UserTypeController@list');
 		Route::get('form/{id?}', 'UserTypeController@form');
 		Route::post('save', 'UserTypeController@save');

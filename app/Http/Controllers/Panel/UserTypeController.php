@@ -35,7 +35,7 @@ class UserTypeController extends Controller {
 
 		$userType->fill($request->all())->save();
 
-		return redirect('/panel/users_type');
+		return redirect('/panel/user_type');
 	}
 
 	function delete(Request $request, $id) {
@@ -43,7 +43,7 @@ class UserTypeController extends Controller {
 
 		UserTypeModel::find($id)->delete();
 
-		return redirect('/panel/users_type');
+		return redirect('/panel/user_type');
 	}
 
 	function enable(Request $request, $id) {
@@ -51,6 +51,6 @@ class UserTypeController extends Controller {
 
 		UserTypeModel::withTrashed()->find($id)->restore();
 
-		return redirect('/panel/users_type');
+		return redirect('/panel/user_type');
 	}
 }

@@ -15,7 +15,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
           @if (authMenu('panel.userType'))
-          <a class="dropdown-item" href="/panel/users_type">Tipo de usuario</a>
+          <a class="dropdown-item" href="/panel/user_type">Tipo de usuario</a>
           @endif
 
           @if (authMenu('panel.user'))
