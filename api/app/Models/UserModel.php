@@ -13,6 +13,13 @@ class UserModel extends Authenticatable
 {
 	use HasFactory, Notifiable, SoftDeletes;
 
+	static public $rules = [
+		'name' => [ 'required', 'min:3', 'max:64' ],
+		'email' => [ 'required', 'email' ],
+		'password' => [ 'required', 'min:3', 'max:32' ],
+		'user_type_id' => [ 'required', 'numeric' ]
+	];
+
 	protected $table = 'user';
 
 	/**

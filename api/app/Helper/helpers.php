@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 function authMenu($route) {
 	$mapAuthMenu = [
@@ -13,4 +14,14 @@ function authMenu($route) {
 	$level = Auth::user()->userType->level;
 
 	return isset($mapAuthMenu[$route]) ? in_array($level, $mapAuthMenu[$route]) : false;
+}
+
+function hasInvalidRulesModel($modelClass, $data) {
+	$validator = Validator::make($data, $modelClass::$rules);
+
+	if ($validator->fails()) {
+		return response()->json([ 'errors' => $validator->errors()->all() ], 422);
+	}
+
+	return null;
 }

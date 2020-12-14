@@ -10,6 +10,11 @@ class UserTypeModel extends Model
 {
 	use HasFactory, SoftDeletes;
 
+	static public $rules = [
+		'name' => [ 'required', 'min:3', 'max:64' ],
+		'level' => [ 'required', 'numeric' ],
+	];
+
 	protected $table = 'user_type';
 
 	protected $fillable = [
