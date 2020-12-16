@@ -14,7 +14,8 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "web-token/jwt-framework": "^2.2"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
@@ -40,7 +41,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helper/helpers.php"
+            "app/Helper/helpers.php",
+            "app/Helper/JWTHelper.php"
         ]
     },
     "autoload-dev": {

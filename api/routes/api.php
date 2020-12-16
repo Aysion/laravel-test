@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Models\UserModel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-		return $request->user();
+Route::group([ 'prefix' => 'auth' ], function () {
+	Route::post('', 'AuthController@auth');
 });
 
-Route::group([ ], function () {
+Route::group([ 'middleware' => 'JWTApi' ], function () {
+	Route::get('', function() {
+		return null;
+	});
+
+
 	Route::resource('userType', 'UserTypeController');
 	Route::resource('user', 'UserController');
 });
