@@ -1,4 +1,6 @@
 <?php
+// Comando para registrar novos Helpers depois de adicionados no composer.json
+// composer dump-autoload
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
