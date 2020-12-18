@@ -2,6 +2,9 @@
 
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Route;
+use Jose\Component\Core\JWK;
+use Jose\Component\Core\JWT;
+use Jose\Easy\Build;
 
 /*
 |--------------------------------------------------------------------------
