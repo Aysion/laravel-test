@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
+
 	/**
 	* Display a listing of the resource.
 	*
 	* @return \Illuminate\Http\Response
 	*/
-	public function index()
+	public function index(Request $request)
 	{
+		Gate::forUser($request['payload'])->authorize('user-viewAny');
+
 		return UserModel::get();
 	}
 
@@ -25,6 +29,8 @@ class UserController extends Controller
 	*/
 	public function store(Request $request)
 	{
+		Gate::forUser($request['payload'])->authorize('user-create');
+
 		$data = $request->all();
 
 		if ($hasInvalidRules = hasInvalidRulesModel(UserModel::class, $data)) {
@@ -48,9 +54,15 @@ class UserController extends Controller
 	* @param  int  $id
 	* @return \Illuminate\Http\Response
 	*/
-	public function show($id)
+	public function show(Request $request, $id)
 	{
-		return UserModel::find($id) ?? response()->json([ 'errors' => ['Usuário não existente ou desativado'] ], 410);
+		if ($user = UserModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('user-view', $user);
+
+			return $user;
+		}
+
+		return response()->json([ 'errors' => ['Usuário não existente ou desativado'] ], 410);
 	}
 
 	/**
@@ -62,18 +74,18 @@ class UserController extends Controller
 	*/
 	public function update(Request $request, $id)
 	{
-		$data = $request->all();
+		if ($user = UserModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('user-update', $user);
 
-		if ($hasInvalidRules = hasInvalidRulesModel(UserModel::class, $data)) {
-			return $hasInvalidRules;
-		}
+			$data = $request->all();
 
-		$userType = UserModel::find($id);
+			if ($hasInvalidRules = hasInvalidRulesModel(UserModel::class, $data)) {
+				return $hasInvalidRules;
+			}
 
-		if ($userType) {
-			$userType->fill($data)->save();
+			$user->fill($data)->save();
 
-			return $userType;
+			return $user;
 		}
 
 		return response()->json([ 'errors' => ['Usuário não existente ou desativado'] ], 410);
@@ -85,14 +97,14 @@ class UserController extends Controller
 	* @param  int  $id
 	* @return \Illuminate\Http\Response
 	*/
-	public function destroy($id)
+	public function destroy(Request $request, $id)
 	{
-		$userType = UserModel::find($id);
+		if ($user = UserModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('user-delete', $user);
 
-		if ($userType) {
-			$userType->delete();
+			$user->delete();
 
-			return $userType;
+			return $user;
 		}
 
 		return response()->json([ 'errors' => ['Usuário não existente ou já desativado'] ], 410);

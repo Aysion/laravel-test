@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserTypeModel;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Gate;
 class UserTypeController extends Controller
 {
 	/**
@@ -12,8 +12,10 @@ class UserTypeController extends Controller
 	*
 	* @return \Illuminate\Http\Response
 	*/
-	public function index()
+	public function index(Request $request)
 	{
+		Gate::forUser($request['payload'])->authorize('userType-viewAny');
+
 		return UserTypeModel::get();
 	}
 
@@ -25,6 +27,8 @@ class UserTypeController extends Controller
 	*/
 	public function store(Request $request)
 	{
+		Gate::forUser($request['payload'])->authorize('userType-create');
+
 		$data = $request->all();
 
 		if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::class, $data)) {
@@ -48,9 +52,15 @@ class UserTypeController extends Controller
 	* @param  int  $id
 	* @return \Illuminate\Http\Response
 	*/
-	public function show($id)
+	public function show(Request $request, $id)
 	{
-		return UserTypeModel::find($id) ?? response()->json([ 'errors' => ['Tipo de usuário não existente ou desativado'] ], 410);
+		if ($userType = UserTypeModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('userType-view', $userType);
+
+			return $userType;
+		}
+
+		return response()->json([ 'errors' => ['Tipo de usuário não existente ou desativado'] ], 410);
 	}
 
 	/**
@@ -62,15 +72,15 @@ class UserTypeController extends Controller
 	*/
 	public function update(Request $request, $id)
 	{
-		$data = $request->all();
+		if ($userType = UserTypeModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('userType-update', $userType);
 
-		if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::class, $data)) {
-			return $hasInvalidRules;
-		}
+			$data = $request->all();
 
-		$userType = UserTypeModel::find($id);
+			if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::class, $data)) {
+				return $hasInvalidRules;
+			}
 
-		if ($userType) {
 			$userType->fill($data)->save();
 
 			return $userType;
@@ -85,11 +95,11 @@ class UserTypeController extends Controller
 	* @param  int  $id
 	* @return \Illuminate\Http\Response
 	*/
-	public function destroy($id)
+	public function destroy(Request $request, $id)
 	{
-		$userType = UserTypeModel::find($id);
+		if ($userType = UserTypeModel::find($id)) {
+			Gate::forUser($request['payload'])->authorize('userType-delete', $userType);
 
-		if ($userType) {
 			$userType->delete();
 
 			return $userType;

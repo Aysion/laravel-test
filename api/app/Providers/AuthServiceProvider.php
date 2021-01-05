@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
 	* @var array
 	*/
 	protected $policies = [
-		// 'App\Models\User' => 'App\Policies\UserPolicy',
+		// 'App\Models\UserType' => 'App\Policies\UserTypePolicy',
 	];
 
 	/**
@@ -24,5 +24,16 @@ class AuthServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		$this->registerPolicies();
+
+		$mapsPolicy = [
+			[ 'user', ['viewAny', 'create', 'view', 'update', 'delete'] ],
+			[ 'userType', ['viewAny', 'create', 'view', 'update', 'delete'] ],
+		];
+
+		foreach ($mapsPolicy as $mapPolicy) {
+			foreach ($mapPolicy[1] as $action) {
+				Gate::define("{$mapPolicy[0]}-{$action}", [ 'App\Policies\\' . ucfirst($mapPolicy[0]) .'Policy', $action ]);
+			}
+		}
 	}
 }

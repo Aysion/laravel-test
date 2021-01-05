@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use JWTHelper;
 
 class JWTApi
 {
@@ -26,8 +27,19 @@ class JWTApi
 			], 401);
 		}
 
-		return response()->json([], 401);
+		$jwtHelper = new JWTHelper;
+		$jwtHelper->setGPToken($gpToken);
 
-		return $next($request);
+		if ($jwtHelper->isValid()) {
+			$request['payload'] = $jwtHelper->getPayload();
+
+			return $next($request);
+		}
+
+		return response()->json([
+			'errors' => [
+				'Token inválido',
+			]
+		], 401);
 	}
 }

@@ -33,11 +33,15 @@ class Handler extends ExceptionHandler
 	*/
 	public function register() {
 		$this->renderable(function (Exception $e, $request) {
-			return response()->json([
-				'errors' => [
-					"{$e->getMessage()} \n Line: {$e->getLine()} \nFiles {$e->getFile()}",
-				]
-			], $e->getStatusCode() ?? 500);
+			if (method_exists($e, 'getStatusCode')) {
+				$msg = $e->getMessage();
+				$statusCode = $e->getStatusCode();
+			} else {
+				$msg = "{$e->getMessage()} \n Line: {$e->getLine()} \nFiles {$e->getFile()}";
+				$statusCode = 500;
+			}
+
+			return response()->json([ 'errors' => [ $msg ] ], $statusCode);
 		});
 	}
 }

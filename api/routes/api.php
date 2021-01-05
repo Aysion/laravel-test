@@ -26,7 +26,6 @@ Route::group([ 'middleware' => 'JWTApi' ], function () {
 		return null;
 	});
 
-
-	Route::resource('userType', 'UserTypeController');
-	Route::resource('user', 'UserController');
+	Route::apiResource('userType', 'UserTypeController');
+	Route::apiResource('user', 'UserController');
 });

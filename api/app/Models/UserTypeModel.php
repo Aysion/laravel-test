@@ -12,7 +12,7 @@ class UserTypeModel extends Model
 
 	static public $rules = [
 		'name' => [ 'required', 'min:3', 'max:64' ],
-		'level' => [ 'required', 'numeric' ],
+		'level' => [ 'required', 'numeric', 'between: 1,100' ],
 	];
 
 	protected $table = 'user_type';
