@@ -16,9 +16,13 @@ class UserController extends Controller
 	*/
 	public function index(Request $request)
 	{
-		Gate::forUser($request['payload'])->authorize('user-viewAny');
+		$userModel = UserModel::query();
 
-		return UserModel::get();
+		if (Gate::forUser($request['payload'])->denies('user-viewAny')) {
+			$userModel->where('id', $request['payload']->user->id)->orWhere('user_id', $request['payload']->user->id);
+		}
+
+		return $userModel->get();
 	}
 
 	/**

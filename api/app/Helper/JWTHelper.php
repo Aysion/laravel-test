@@ -62,7 +62,7 @@ class JWTHelper
 		return (new JWSVerifier($this->algorithmManager))->verifyWithKey($this->jws, $this->jwk, 0);
 	}
 
-	public function getOctKey()
+	public static function getOctKey()
 	{
 		return JWKFactory::createOctKey(2048, ['alg' => 'PS512', 'use' => 'sig']);
 	}

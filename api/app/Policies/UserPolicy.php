@@ -9,38 +9,37 @@ class UserPolicy
 {
 	use HandlesAuthorization;
 
+	public function before($payload, $action) {
+		return in_array($payload->user->level, [99, 1]) ? true : null;
+	}
+
 	public function viewAny($payload)
 	{
-		return true;
+		return false;
 	}
 
 	public function view($payload, UserModel $userModel)
 	{
-		return true;
+		return $userModel->id == $payload->user->id || $userModel->user_id == $payload->user->id;
 	}
 
 	public function create($payload)
 	{
-		return true;
+		return false;
 	}
 
 	public function update($payload, UserModel $userModel)
 	{
-		return true;
+		return false;
 	}
 
 	public function delete($payload, UserModel $userModel)
 	{
-		return true;
+		return false;
 	}
 
 	public function restore($payload, UserModel $userModel)
 	{
-		return true;
-	}
-
-	public function forceDelete($payload, UserModel $userModel)
-	{
-		return true;
+		return false;
 	}
 }

@@ -19,6 +19,7 @@ use Jose\Easy\Build;
 
 Route::group([ 'prefix' => 'auth' ], function () {
 	Route::post('', 'AuthController@auth');
+	Route::get('getOctKey', 'AuthController@getOctKey');
 });
 
 Route::group([ 'middleware' => 'JWTApi' ], function () {

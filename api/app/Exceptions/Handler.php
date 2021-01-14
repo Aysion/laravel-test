@@ -34,8 +34,15 @@ class Handler extends ExceptionHandler
 	public function register() {
 		$this->renderable(function (Exception $e, $request) {
 			if (method_exists($e, 'getStatusCode')) {
-				$msg = $e->getMessage();
 				$statusCode = $e->getStatusCode();
+
+				switch ($statusCode) {
+					case 403: $msg = 'Esta ação não é autorizada.';
+						break;
+					default: $msg = $e->getMessage();
+						break;
+				}
+
 			} else {
 				$msg = "{$e->getMessage()} \n Line: {$e->getLine()} \nFiles {$e->getFile()}";
 				$statusCode = 500;
