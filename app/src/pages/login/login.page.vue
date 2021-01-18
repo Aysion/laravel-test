@@ -12,15 +12,15 @@
 							<div class="q-pa-md">
 								<div class="q-gutter-md">
 									<q-form ref="formLogin">
-										<q-input type="email" name="email" label="E-mail" />
-										<q-input type="password" name="password" label="Senha" />
+										<q-input type="email" v-model="login.email" label="E-mail" />
+										<q-input type="password" v-model="login.password" label="Senha" />
 									</q-form>
 								</div>
 							</div>
 						</q-card-section>
 
 						<q-card-actions vertical>
-							<q-btn color="primary">Logar</q-btn>
+							<q-btn color="primary" @click="onSubmit()">Logar</q-btn>
 						</q-card-actions>
 					</q-card>
 				</div>
@@ -30,7 +30,21 @@
 </template>
 
 <script lang="ts">
-export default {};
+export default {
+	data() {
+		return {
+			login: {
+				email: null,
+				password: null,
+			}
+		}
+	},
+	methods: {
+		onSubmit() {
+			console.log(this.login);
+		}
+	}
+};
 </script>
 
 <style>
