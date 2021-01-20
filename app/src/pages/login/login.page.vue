@@ -40,9 +40,18 @@ export default {
 		}
 	},
 	methods: {
-		onSubmit() {
-			console.log(this.login);
+		onSubmit(): Promise<any> {
+			return this.$axios({
+				method: 'post',
+				url: 'http://127.0.0.1:8000/api/auth',
+				data: this.login,
+			}).then(resp => {
+				this.$q.sessionStorage.set('gpToken', resp.data)
+			})
 		}
+	},
+	mounted() {
+
 	}
 };
 </script>
