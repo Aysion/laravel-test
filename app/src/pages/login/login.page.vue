@@ -47,7 +47,7 @@ export default {
 				data: this.login,
 			}).then(resp => {
 				this.$q.sessionStorage.set('gpToken', resp.data)
-			})
+			}).catch(console.warn)
 		}
 	},
 	mounted() {
