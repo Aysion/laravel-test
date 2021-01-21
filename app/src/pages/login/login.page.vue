@@ -8,20 +8,20 @@
 							Login
 						</q-card-section>
 
-						<q-card-section>
-							<div class="q-pa-md">
-								<div class="q-gutter-md">
-									<q-form ref="formLogin">
-										<q-input type="email" v-model="login.email" label="E-mail" />
-										<q-input type="password" v-model="login.password" label="Senha" />
-									</q-form>
+						<q-form ref="formLogin" @submit="onSubmit()">
+							<q-card-section>
+								<div class="q-pa-md">
+									<div class="q-gutter-md">
+										<q-input type="email" v-model="login.email" label="E-mail*" required />
+										<q-input type="password" v-model="login.password" label="Senha*" required />
+									</div>
 								</div>
-							</div>
-						</q-card-section>
+							</q-card-section>
 
-						<q-card-actions vertical>
-							<q-btn color="primary" @click="onSubmit()">Logar</q-btn>
-						</q-card-actions>
+							<q-card-actions vertical>
+								<q-btn type="submit" color="primary">Logar</q-btn>
+							</q-card-actions>
+						</q-form>
 					</q-card>
 				</div>
 			</q-page>
@@ -30,6 +30,8 @@
 </template>
 
 <script lang="ts">
+import { AxiosResponse } from 'axios';
+
 export default {
 	data() {
 		return {
@@ -45,13 +47,15 @@ export default {
 				method: 'post',
 				url: 'http://127.0.0.1:8000/api/auth',
 				data: this.login,
-			}).then(resp => {
+			}).then((resp: AxiosResponse) => {
 				this.$q.sessionStorage.set('gpToken', resp.data)
+
+				this.$router.push({ name: 'home' })
 			}).catch(console.warn)
 		}
 	},
 	mounted() {
-
+		console.log('PageLogin')
 	}
 };
 </script>

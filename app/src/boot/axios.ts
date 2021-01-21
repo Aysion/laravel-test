@@ -11,13 +11,15 @@ declare module 'vue/types/vue' {
 axios.interceptors.response.use(function (response) {
 	let { data } = response
 
-	data.errors.forEach((error: string) => {
-		Notify.create({
-			type: 'negative',
-			message: error,
-			actions: [{ icon: 'close', color: 'white' }]
+	if (data.errors) {
+		data.errors.forEach((error: string) => {
+			Notify.create({
+				type: 'negative',
+				message: error,
+				actions: [{ icon: 'close', color: 'white' }]
+			})
 		})
-	})
+	}
 
 	return response;
 }, function (error) {
