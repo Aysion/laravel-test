@@ -104,5 +104,8 @@ module.exports = {
 		"no-return-assign": 0,
 		"eqeqeq": 0,
 		"new-parens": 0,
+		"no-void": false,
+		"@typescript-eslint/no-floating-promises": false,
+		"@typescript-eslint/no-unsafe-assignment": false,
 	}
 }

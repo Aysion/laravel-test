@@ -14,6 +14,7 @@
 									<div class="q-gutter-md">
 										<q-input type="email" v-model="login.email" label="E-mail*" required />
 										<q-input type="password" v-model="login.password" label="Senha*" required />
+										<q-toggle v-model="keepConnected" label="Manter conectado" />
 									</div>
 								</div>
 							</q-card-section>
@@ -30,11 +31,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from '@vue/composition-api'
 import { AxiosResponse } from 'axios';
 
-export default {
+export default defineComponent({
 	data() {
 		return {
+			keepConnected: false,
 			login: {
 				email: null,
 				password: null,
@@ -42,22 +45,24 @@ export default {
 		}
 	},
 	methods: {
-		onSubmit(): Promise<any> {
+		onSubmit() {
 			return this.$axios({
 				method: 'post',
-				url: 'http://127.0.0.1:8000/api/auth',
+				url: 'auth',
 				data: this.login,
 			}).then((resp: AxiosResponse) => {
-				this.$q.sessionStorage.set('gpToken', resp.data)
+				this.$q[this.keepConnected ? 'localStorage' : 'sessionStorage'].set('gpToken', resp.data)
 
 				this.$router.push({ name: 'home' })
+
+				return resp
 			}).catch(console.warn)
 		}
 	},
 	mounted() {
 		console.log('PageLogin')
 	}
-};
+})
 </script>
 
 <style>

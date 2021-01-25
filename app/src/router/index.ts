@@ -1,5 +1,5 @@
 import { route } from 'quasar/wrappers'
-import { SessionStorage } from 'quasar'
+import { SessionStorage, LocalStorage } from 'quasar'
 import VueRouter from 'vue-router'
 import { Store } from 'vuex'
 import { StateInterface } from '../store'
@@ -25,7 +25,7 @@ export default route<Store<StateInterface>>(function ({ Vue }) {
 	})
 
 	Router.beforeEach((to, from, next) => {
-		const gpToken = SessionStorage.getItem('gpToken')
+		const gpToken = SessionStorage.getItem('gpToken') || LocalStorage.getItem('gpToken')
 
 		if (gpToken) to.name == 'login' ? next({ name: 'home' }) : next()
 		else if (to.name != 'login') next({ name: 'login' })
