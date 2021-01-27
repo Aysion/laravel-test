@@ -10,7 +10,12 @@ const routes: RouteConfig[] = [
 		path: '/',
 		component: () => import('layouts/MainLayout.vue'),
 		children: [
-			{ name: 'home', path: '', component: () => import('pages/Index.vue') }
+			{ name: 'home', path: '', component: () => import('pages/Index.vue') },
+			{
+				name: 'userType',
+				path: 'userType',
+				component: () => import('pages/userType/userType.page.vue'),
+			},
 		]
 	},
 	{
