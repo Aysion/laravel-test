@@ -108,5 +108,6 @@ module.exports = {
 		"@typescript-eslint/no-floating-promises": false,
 		"@typescript-eslint/no-unsafe-assignment": false,
 		"@typescript-eslint/no-unsafe-member-access": false,
+		"@typescript-eslint/restrict-template-expressions": false,
 	}
 }

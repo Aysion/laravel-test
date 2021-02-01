@@ -1,6 +1,6 @@
 <template>
 	<q-page>
-		<tableList title="Tipo de Usuário" :columns="columns" :dataList="dataList" @onSubmit="onSubmit">
+		<tableList title="Tipo de Usuário" domain="userType" :columns="columns">
 			<template #form="slotProps">
 				<q-input filled v-model="slotProps.formData.name" label="Nome" />
 
@@ -19,7 +19,6 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import { AxiosResponse } from 'axios'
 import tableList from '../../components/tableList.vue'
 
 export default defineComponent({
@@ -61,27 +60,8 @@ export default defineComponent({
 		}
 	},
 	methods: {
-		getDataList() {
-			return this.$axios({
-				method: 'get',
-				url: 'userType',
-			}).then((resp: AxiosResponse) => {
-				this.dataList = resp.data
-			})
-		},
-		onSubmit({ formData, scopeTable: { pageIndex } }) {
-			return this.$axios({
-				method: formData.id ? 'put' : 'post',
-				url: `userType/${(formData.id || '')}`,
-				data: formData,
-			}).then((resp: AxiosResponse) => {
-				this.$set(this.dataList, pageIndex, resp.data)
-			})
-		}
+
 	},
-	mounted() {
-		this.getDataList()
-	}
 })
 </script>
 
