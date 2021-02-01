@@ -7,14 +7,14 @@
 			:data="dataList"
 			:columns="columns"
 		>
-			<template v-slot:body="scope">
+			<template v-slot:body="scope" user="">
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
 						<span v-if="col.name !== '_btn_'">{{ scope.row[col.field] }}</span>
 						<span v-if="col.name == '_btn_'">
 							<q-btn v-if="!scope.row.deleted_at" size="12px" flat dense round icon="delete" class="gt-xs" />
-							<q-btn v-else size="12px" flat dense round icon="restore_from_trash" class="gt-xs" @click="dialogForm()" />
-							<q-btn v-if="!scope.row.deleted_at" size="12px" flat dense round icon="edit" class="gt-xs" @click="dialogForm()" />
+							<q-btn v-else size="12px" flat dense round icon="restore_from_trash" class="gt-xs" @click="dialogForm(scope)" />
+							<q-btn v-if="!scope.row.deleted_at" size="12px" flat dense round icon="edit" class="gt-xs" @click="dialogForm(scope)" />
 						</span>
 					</q-td>
 				</q-tr>
@@ -27,21 +27,25 @@
 					<div class="text-h6">{{ title }}</div>
 				</q-card-section>
 
-				<q-card-section class="q-pt-none scroll" style="max-height: 50vh">
-					<slot name="form"/>
-				</q-card-section>
+				<q-form @submit="onSubmit()" ref="formSlot">
+					<q-card-section class="q-pt-none scroll" style="max-height: 50vh">
+						<slot name="form" :formData="formData"/>
+					</q-card-section>
 
-				<q-card-actions align="right">
-					<q-btn flat label="Cancelar" color="primary" v-close-popup />
-					<q-btn flat label="Salvar" color="primary" v-close-popup />
-				</q-card-actions>
+					<q-card-actions align="right">
+						<q-btn flat label="Cancelar" color="primary" v-close-popup />
+						<q-btn type="submit" flat label="Salvar" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-form>
 			</q-card>
 		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from "@vue/composition-api"
+
+export default defineComponent({
 	name: 'tableList',
 	props: {
 		dataList: {
@@ -60,14 +64,22 @@ export default {
 	data() {
 		return {
 			showDialogForm: false,
+			formData: {},
+			scopeTable: null,
 		}
 	},
 	methods: {
-		dialogForm() {
+		dialogForm(scopeTable) {
 			this.showDialogForm = true
-		}
-	}
-}
+
+			this.scopeTable = scopeTable
+			this.formData = JSON.parse(JSON.stringify(scopeTable.row))
+		},
+		onSubmit() {
+			this.$emit('onSubmit', { scopeTable: this.scopeTable, formData: this.formData })
+		},
+	},
+})
 </script>
 
 <style>

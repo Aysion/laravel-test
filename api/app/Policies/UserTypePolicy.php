@@ -11,7 +11,7 @@ class UserTypePolicy
 	use HandlesAuthorization;
 
 	public function before($payload, $action) {
-		return in_array($payload->user->level, [99, 1]);
+		return in_array($payload->user->level, [101, 1]);
 	}
 
 	public function viewAny($payload)

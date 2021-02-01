@@ -1,8 +1,17 @@
 <template>
 	<q-page>
-		<tableList title="Tipo de Usuário" :columns="columns" :dataList="dataList">
-			<template v-slot:form>
-				<p v-for="n in 15" :key="n">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+		<tableList title="Tipo de Usuário" :columns="columns" :dataList="dataList" @onSubmit="onSubmit">
+			<template #form="slotProps">
+				<q-input filled v-model="slotProps.formData.name" label="Nome" />
+
+				<label>Nivel: {{slotProps.formData.level}}</label>
+				<q-slider
+					v-model="slotProps.formData.level"
+					:min="0"
+					:max="100"
+					label
+					color="light-blue"
+				/>
 			</template>
 		</tableList>
 	</q-page>
@@ -14,6 +23,7 @@ import { AxiosResponse } from 'axios'
 import tableList from '../../components/tableList.vue'
 
 export default defineComponent({
+	name: 'userType.page',
 	components: {
 		tableList,
 	},
@@ -57,6 +67,15 @@ export default defineComponent({
 				url: 'userType',
 			}).then((resp: AxiosResponse) => {
 				this.dataList = resp.data
+			})
+		},
+		onSubmit({ formData, scopeTable: { pageIndex } }) {
+			return this.$axios({
+				method: formData.id ? 'put' : 'post',
+				url: `userType/${(formData.id || '')}`,
+				data: formData,
+			}).then((resp: AxiosResponse) => {
+				this.$set(this.dataList, pageIndex, resp.data)
 			})
 		}
 	},

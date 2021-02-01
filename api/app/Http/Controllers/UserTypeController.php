@@ -16,7 +16,7 @@ class UserTypeController extends Controller
 	{
 		Gate::forUser($request['payload'])->authorize('userType-viewAny');
 
-		return UserTypeModel::get();
+		return UserTypeModel::where('level', '!=', '101')->get();
 	}
 
 	/**

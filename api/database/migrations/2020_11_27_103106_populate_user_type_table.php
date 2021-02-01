@@ -14,7 +14,7 @@ class PopulateUserTypeTable extends Migration
 	*/
 	public function up()
 	{
-		DB::table('user_type')->updateOrInsert([ 'id' => 1 ], [ 'name' => 'Administrador', 'level' => 99 ]);
+		DB::table('user_type')->updateOrInsert([ 'id' => 1 ], [ 'name' => 'Administrador', 'level' => 101 ]);
 		DB::table('user_type')->updateOrInsert([ 'id' => 2 ], [ 'name' => 'Diretor', 'level' => 1 ]);
 		DB::table('user_type')->updateOrInsert([ 'id' => 3 ], [ 'name' => 'Gerente', 'level' => 2 ]);
 		DB::table('user_type')->updateOrInsert([ 'id' => 4 ], [ 'name' => 'Vendedor', 'level' => 3 ]);

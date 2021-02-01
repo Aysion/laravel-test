@@ -10,7 +10,7 @@ class UserPolicy
 	use HandlesAuthorization;
 
 	public function before($payload, $action) {
-		return in_array($payload->user->level, [99, 1]) ? true : null;
+		return in_array($payload->user->level, [101, 1]) ? true : null;
 	}
 
 	public function viewAny($payload)
