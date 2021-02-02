@@ -11,18 +11,20 @@
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
 						<span v-if="col.name !== '_btn_'">{{ scope.row[col.field] }}</span>
-						<span v-if="col.name == '_btn_'" class="q-gutter-md">
-							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="delete" color="negative" class="gt-xs" @click="onDelete(scope)">
+						<span v-else class="q-gutter-md">
+							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="delete" color="negative" @click="onDelete(scope)">
 								<q-tooltip content-class="bg-red-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
 									Deletar
 								</q-tooltip>
 							</q-btn>
-							<q-btn v-else size="12px" dense round icon="restore_from_trash" class="gt-xs" color="secondary" @click="dialogForm(scope)">
+
+							<q-btn v-else size="12px" dense round icon="restore_from_trash" color="secondary" @click="onRestore(scope)">
 								<q-tooltip content-class="bg-teal-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
 									Restaurar
 								</q-tooltip>
 							</q-btn>
-							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="edit" class="gt-xs" color="primary" @click="dialogForm(scope)">
+
+							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="edit" color="primary" @click="dialogForm(scope)">
 								<q-tooltip content-class="bg-blue-9" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
 									Editar
 								</q-tooltip>
@@ -110,6 +112,11 @@ export default defineComponent({
 			return this.$axios({
 				method: 'get',
 				url: this.domain,
+				headers: {
+					'gpModelParams': JSON.stringify({
+						withTrashed: 1,
+					}),
+				},
 			}).then((resp: AxiosResponse) => {
 				this.dataList = resp.data
 			})
@@ -124,10 +131,22 @@ export default defineComponent({
 			})
 		},
 		onDelete(scopeTable) {
-			this.dialogConfirm({
-				body: `Deseja deletar esse registro? <br> ID: ${scopeTable.row.id}`,
-				onConfirm: () => {
-					this.processDelete(scopeTable.row.id)
+			return this.dialogConfirm({
+				body: `Deseja Deletar esse registro? <br> ID: ${scopeTable.row.id}`,
+				onConfirm: async () => {
+					await this.processDelete(scopeTable.row.id)
+
+					this.$delete(this.dataList, scopeTable.pageIndex)
+				}
+			})
+		},
+		onRestore(scopeTable) {
+			return this.dialogConfirm({
+				body: `Deseja Restaurar esse registro? <br> ID: ${scopeTable.row.id}`,
+				onConfirm: async () => {
+					const data = await this.processRestore(scopeTable.row.id)
+
+					this.$set(this.dataList, scopeTable.pageIndex, data)
 				}
 			})
 		},
@@ -136,11 +155,21 @@ export default defineComponent({
 				method: 'delete',
 				url: `${this.domain}/${id}`,
 			}).then((resp: AxiosResponse) => {
-				console.log(resp.data)
+				return resp.data
 			})
 		},
-		dialogConfirm(dataDialogConfirm) {
+		processRestore(id) {
+			return this.$axios({
+				method: 'put',
+				url: `${this.domain}/restore/${id}`,
+			}).then((resp: AxiosResponse) => {
+				return resp.data
+			})
+		},
+		async dialogConfirm(dataDialogConfirm) {
 			Object.assign(this.dataDialogConfirm, dataDialogConfirm, { show: true })
+
+			return true
 		}
 	},
 	mounted() {

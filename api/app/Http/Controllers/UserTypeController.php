@@ -16,7 +16,18 @@ class UserTypeController extends Controller
 	{
 		Gate::forUser($request['payload'])->authorize('userType-viewAny');
 
-		return UserTypeModel::where('level', '!=', '101')->get();
+		$model = UserTypeModel::where('level', '!=', '101');
+
+		if ($request->header('gpModelParams')) {
+			$gpModelParams = json_decode($request->header('gpModelParams'));
+
+			if ($gpModelParams->withTrashed) {
+				$model->withTrashed();
+			}
+
+		}
+
+		return $model->get();
 	}
 
 	/**
@@ -106,5 +117,10 @@ class UserTypeController extends Controller
 		}
 
 		return response()->json([ 'errors' => ['Tipo de usuário não existente ou já desativado'] ], 410);
+	}
+
+	public function restore (Request $request, $id)
+	{
+		return $request->all();
 	}
 }
