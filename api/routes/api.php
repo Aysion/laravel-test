@@ -28,5 +28,9 @@ Route::group([ 'middleware' => 'JWTApi' ], function () {
 	});
 
 	Route::apiResource('userType', 'UserTypeController');
+	Route::patch('userType/{userType}/restore', 'UserTypeController@restore')->name('userType.restore');
+
 	Route::apiResource('user', 'UserController');
+	Route::patch('user/{user}/restore', 'UserController@restore')->name('user.restore');
+
 });

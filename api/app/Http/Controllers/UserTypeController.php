@@ -121,6 +121,14 @@ class UserTypeController extends Controller
 
 	public function restore (Request $request, $id)
 	{
-		return $request->all();
+		if ($userType = UserTypeModel::withTrashed()->find($id)) {
+			Gate::forUser($request['payload'])->authorize('userType-restore', $userType);
+
+			$userType->restore();
+
+			return $userType;
+		}
+
+		return response()->json([ 'errors' => ['Tipo de usuário não existente'] ], 410);
 	}
 }

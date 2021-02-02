@@ -26,8 +26,8 @@ class AuthServiceProvider extends ServiceProvider
 		$this->registerPolicies();
 
 		$mapsPolicy = [
-			[ 'user', ['viewAny', 'create', 'view', 'update', 'delete'] ],
-			[ 'userType', ['viewAny', 'create', 'view', 'update', 'delete'] ],
+			[ 'user', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
+			[ 'userType', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
 		];
 
 		foreach ($mapsPolicy as $mapPolicy) {

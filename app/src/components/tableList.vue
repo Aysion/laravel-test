@@ -3,10 +3,21 @@
 		<q-table
 			row-key="id"
 			separator="cell"
-			:title="title"
 			:data="dataList"
 			:columns="columns"
 		>
+			<template v-slot:top>
+				<div class="col-10 q-table__title">{{ title }}</div>
+
+				<q-space />
+
+				<q-btn size="12px" dense round icon="add" color="positive" @click="dialogForm()">
+					<q-tooltip content-class="bg-green-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
+						Novo
+					</q-tooltip>
+				</q-btn>
+			</template>
+
 			<template v-slot:body="scope" user="">
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
@@ -103,17 +114,23 @@ export default defineComponent({
 		}
 	},
 	methods: {
-		dialogForm(scopeTable) {
+		dialogForm(scopeTable = null) {
 			this.showDialogForm = true
-			this.scopeTable = scopeTable
-			this.formData = JSON.parse(JSON.stringify(scopeTable.row))
+
+			if (scopeTable) {
+				this.scopeTable = scopeTable
+				this.formData = JSON.parse(JSON.stringify(scopeTable.row))
+			} else {
+				this.scopeTable = null
+				this.formData = {}
+			}
 		},
 		getDataList() {
-			return this.$axios({
+			this.$axios({
 				method: 'get',
 				url: this.domain,
 				headers: {
-					'gpModelParams': JSON.stringify({
+					gpModelParams: JSON.stringify({
 						withTrashed: 1,
 					}),
 				},
@@ -122,54 +139,64 @@ export default defineComponent({
 			})
 		},
 		onSubmit() {
-			return this.$axios({
+			this.$axios({
 				method: this.formData.id ? 'put' : 'post',
 				url: `${this.domain}/${(this.formData.id || '')}`,
 				data: this.formData,
 			}).then((resp: AxiosResponse) => {
-				this.$set(this.dataList, this.scopeTable.pageIndex, resp.data)
+				this.$set(this.dataList, (this.scopeTable ? this.scopeTable.rowIndex : this.dataList.length), resp.data)
+
+				this.$q.notify({
+					type: 'positive',
+					message: 'Salvo com sucesso',
+					actions: [{ icon: 'close', color: 'white' }],
+				})
 			})
 		},
 		onDelete(scopeTable) {
-			return this.dialogConfirm({
+			this.dialogConfirm({
 				body: `Deseja Deletar esse registro? <br> ID: ${scopeTable.row.id}`,
-				onConfirm: async () => {
-					await this.processDelete(scopeTable.row.id)
+				onConfirm: () => {
+					this.$axios({
+						method: 'delete',
+						url: `${this.domain}/${scopeTable.row.id}`,
+					}).then((resp: AxiosResponse) => {
+						if (resp.data) {
+							this.$set(this.dataList, scopeTable.rowIndex, resp.data)
+						} else {
+							this.$delete(this.dataList, scopeTable.rowIndex)
+						}
 
-					this.$delete(this.dataList, scopeTable.pageIndex)
+						this.$q.notify({
+							type: 'positive',
+							message: 'Deletado com sucesso',
+							actions: [{ icon: 'close', color: 'white' }],
+						})
+					})
 				}
 			})
 		},
 		onRestore(scopeTable) {
-			return this.dialogConfirm({
+			this.dialogConfirm({
 				body: `Deseja Restaurar esse registro? <br> ID: ${scopeTable.row.id}`,
-				onConfirm: async () => {
-					const data = await this.processRestore(scopeTable.row.id)
+				onConfirm: () => {
+					this.$axios({
+						method: 'patch',
+						url: `${this.domain}/${scopeTable.row.id}/restore`,
+					}).then((resp: AxiosResponse) => {
+						this.$set(this.dataList, scopeTable.rowIndex, resp.data)
 
-					this.$set(this.dataList, scopeTable.pageIndex, data)
+						this.$q.notify({
+							type: 'positive',
+							message: 'Restaurado com sucesso',
+							actions: [{ icon: 'close', color: 'white' }],
+						})
+					})
 				}
 			})
 		},
-		processDelete(id) {
-			return this.$axios({
-				method: 'delete',
-				url: `${this.domain}/${id}`,
-			}).then((resp: AxiosResponse) => {
-				return resp.data
-			})
-		},
-		processRestore(id) {
-			return this.$axios({
-				method: 'put',
-				url: `${this.domain}/restore/${id}`,
-			}).then((resp: AxiosResponse) => {
-				return resp.data
-			})
-		},
-		async dialogConfirm(dataDialogConfirm) {
+		dialogConfirm(dataDialogConfirm) {
 			Object.assign(this.dataDialogConfirm, dataDialogConfirm, { show: true })
-
-			return true
 		}
 	},
 	mounted() {
