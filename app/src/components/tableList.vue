@@ -11,10 +11,22 @@
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
 						<span v-if="col.name !== '_btn_'">{{ scope.row[col.field] }}</span>
-						<span v-if="col.name == '_btn_'">
-							<q-btn v-if="!scope.row.deleted_at" size="12px" flat dense round icon="delete" class="gt-xs" @click="onDelete(scope)" />
-							<q-btn v-else size="12px" flat dense round icon="restore_from_trash" class="gt-xs" @click="dialogForm(scope)" />
-							<q-btn v-if="!scope.row.deleted_at" size="12px" flat dense round icon="edit" class="gt-xs" @click="dialogForm(scope)" />
+						<span v-if="col.name == '_btn_'" class="q-gutter-md">
+							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="delete" color="negative" class="gt-xs" @click="onDelete(scope)">
+								<q-tooltip content-class="bg-red-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
+									Deletar
+								</q-tooltip>
+							</q-btn>
+							<q-btn v-else size="12px" dense round icon="restore_from_trash" class="gt-xs" color="secondary" @click="dialogForm(scope)">
+								<q-tooltip content-class="bg-teal-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
+									Restaurar
+								</q-tooltip>
+							</q-btn>
+							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="edit" class="gt-xs" color="primary" @click="dialogForm(scope)">
+								<q-tooltip content-class="bg-blue-9" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
+									Editar
+								</q-tooltip>
+							</q-btn>
 						</span>
 					</q-td>
 				</q-tr>
@@ -33,8 +45,8 @@
 					</q-card-section>
 
 					<q-card-actions align="right">
-						<q-btn flat label="Cancelar" color="primary" v-close-popup />
 						<q-btn type="submit" flat label="Salvar" color="primary" v-close-popup />
+						<q-btn label="Cancelar" color="negative" v-close-popup />
 					</q-card-actions>
 				</q-form>
 			</q-card>
