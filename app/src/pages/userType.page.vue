@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
-import tableList from '../../components/tableList.vue'
+import tableList from '../components/tableList.vue'
 
 export default defineComponent({
 	name: 'userType.page',

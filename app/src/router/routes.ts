@@ -4,7 +4,7 @@ const routes: RouteConfig[] = [
 	{
 		name: 'login',
 		path: '/login',
-		component: () => import('pages/login/login.page.vue')
+		component: () => import('pages/login.page.vue')
 	},
 	{
 		path: '/',
@@ -14,7 +14,12 @@ const routes: RouteConfig[] = [
 			{
 				name: 'userType',
 				path: 'userType',
-				component: () => import('pages/userType/userType.page.vue'),
+				component: () => import('pages/userType.page.vue'),
+			},
+			{
+				name: 'user',
+				path: 'user',
+				component: () => import('pages/user.page.vue'),
 			},
 		]
 	},

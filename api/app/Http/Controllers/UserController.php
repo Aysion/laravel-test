@@ -113,4 +113,17 @@ class UserController extends Controller
 
 		return response()->json([ 'errors' => ['Usuário não existente ou já desativado'] ], 410);
 	}
+
+	public function restore(Request $request, $id)
+	{
+		if ($user = UserModel::withTrashed()->find($id)) {
+			Gate::forUser($request['payload'])->authorize('user-restore', $user);
+
+			$user->restore();
+
+			return $user;
+		}
+
+		return response()->json([ 'errors' => ['Usuário não existente'] ], 410);
+	}
 }

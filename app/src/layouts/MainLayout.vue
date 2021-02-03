@@ -52,9 +52,15 @@ import EssentialLink from '../components/EssentialLink.vue'
 const linksData = [
 	{
 		title: 'Tipo de Usuário',
-		caption: 'quasar.dev',
+		caption: '',
 		icon: 'school',
 		link: '/userType'
+	},
+	{
+		title: 'Usuário',
+		caption: '',
+		icon: 'school',
+		link: '/user'
 	},
 ]
 

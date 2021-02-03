@@ -21,7 +21,7 @@
 			<template v-slot:body="scope" user="">
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
-						<span v-if="col.name !== '_btn_'">{{ scope.row[col.field] }}</span>
+						<span v-if="col.name !== '_btn_'">{{ getField(scope.row, col.field)  }}</span>
 						<span v-else class="q-gutter-md">
 							<q-btn v-if="!scope.row.deleted_at" size="12px" dense round icon="delete" color="negative" @click="onDelete(scope)">
 								<q-tooltip content-class="bg-red-8" content-style="font-size: .9em" anchor="top middle" self="bottom middle" :offset="[0, 5]">
@@ -197,7 +197,23 @@ export default defineComponent({
 		},
 		dialogConfirm(dataDialogConfirm) {
 			Object.assign(this.dataDialogConfirm, dataDialogConfirm, { show: true })
-		}
+		},
+		getField(data, field: string) {
+			const fieldPath = field.split('.')
+			let dataCurrent = data
+
+			for (let i = 0; i < fieldPath.length; i++) {
+				const fieldCurrent = fieldPath[i]
+
+				if (dataCurrent.hasOwnProperty(fieldCurrent)) {
+					dataCurrent = dataCurrent[fieldCurrent]
+				} else {
+					break
+				}
+			}
+
+			return dataCurrent
+		},
 	},
 	mounted() {
 		this.getDataList()
