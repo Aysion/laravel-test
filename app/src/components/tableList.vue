@@ -18,7 +18,7 @@
 				</q-btn>
 			</template>
 
-			<template v-slot:body="scope" user="">
+			<template v-slot:body="scope">
 				<q-tr :props="scope">
 					<q-td v-for="(col, key) in scope.colsMap" :key="key" :props="scope">
 						<span v-if="col.name !== '_btn_'">{{ getField(scope.row, col.field)  }}</span>
@@ -47,13 +47,13 @@
 		</q-table>
 
 		<q-dialog v-model="showDialogForm" transition-show="rotate" transition-hide="rotate" persistent>
-			<q-card>
+			<q-card style="width: 700px; max-width: 80vw;">
 				<q-card-section>
 					<div class="text-h6">{{ title }}</div>
 				</q-card-section>
 
 				<q-form @submit="onSubmit()" ref="formSlot">
-					<q-card-section class="q-pt-none scroll" style="max-height: 50vh">
+					<q-card-section class="q-pt-none scroll q-gutter-sm" style="max-height: 50vh">
 						<slot name="form" :formData="formData"/>
 					</q-card-section>
 
@@ -136,7 +136,7 @@ export default defineComponent({
 				},
 			}).then((resp: AxiosResponse) => {
 				this.dataList = resp.data
-			})
+			}).catch(console.warn)
 		},
 		onSubmit() {
 			this.$axios({
@@ -151,7 +151,7 @@ export default defineComponent({
 					message: 'Salvo com sucesso',
 					actions: [{ icon: 'close', color: 'white' }],
 				})
-			})
+			}).catch(console.warn)
 		},
 		onDelete(scopeTable) {
 			this.dialogConfirm({
@@ -172,7 +172,7 @@ export default defineComponent({
 							message: 'Deletado com sucesso',
 							actions: [{ icon: 'close', color: 'white' }],
 						})
-					})
+					}).catch(console.warn)
 				}
 			})
 		},
@@ -191,7 +191,7 @@ export default defineComponent({
 							message: 'Restaurado com sucesso',
 							actions: [{ icon: 'close', color: 'white' }],
 						})
-					})
+					}).catch(console.warn)
 				}
 			})
 		},

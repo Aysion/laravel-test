@@ -2,15 +2,33 @@
 	<q-page>
 		<tableList title="Usuário" domain="user" :columns="columns">
 			<template #form="slotProps">
-				<q-input filled v-model="slotProps.formData.name" label="Nome" />
+				<q-input v-model="slotProps.formData.name" label="Nome" filled />
 
-				<label>Nivel: {{slotProps.formData.level}}</label>
-				<q-slider
-					v-model="slotProps.formData.level"
-					:min="0"
-					:max="100"
-					label
-					color="light-blue"
+				<q-input
+					type="email"
+					filled
+					v-model="slotProps.formData.email"
+					label="E-mail"
+				/>
+
+				<q-select
+					label="Tipo de Usuário"
+					option-value="id"
+					option-label="name"
+					v-model="slotProps.formData.user_type_id"
+					:options="options.userType"
+					emit-value
+					map-options
+					filled
+				/>
+
+				<q-separator class="q-my-md" />
+
+				<q-input
+					type="password"
+					v-model="slotProps.formData.password"
+					label="Nova Senha"
+					filled
 				/>
 			</template>
 		</tableList>
@@ -18,11 +36,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
-import tableList from '../components/tableList.vue'
+import { defineComponent } from "@vue/composition-api";
+import tableList from "../components/tableList.vue";
 
 export default defineComponent({
-	name: 'user.page',
+	name: "user.page",
 	components: {
 		tableList,
 	},
@@ -31,47 +49,59 @@ export default defineComponent({
 			dataList: [],
 			columns: [
 				{
-					name: 'id',
+					name: "id",
 					label: "ID",
 					field: "id",
-					headerStyle: 'width: 100px',
+					headerStyle: "width: 100px",
 					sortable: true,
 				},
 				{
-					name: 'email',
+					name: "email",
 					label: "E-mail",
 					field: "email",
 					align: "left",
 					sortable: true,
 				},
 				{
-					name: 'name',
+					name: "name",
 					label: "Tipo",
 					field: "name",
-					align: 'left',
+					align: "left",
 					sortable: true,
 				},
 				{
-					name: 'userType',
+					name: "userType",
 					label: "Tipo de Usuário",
 					field: "userType.name",
-					align: 'left',
+					align: "left",
 					sortable: true,
 				},
 				{
-					name: '_btn_',
-					align: 'left',
-					headerStyle: 'width: 100px',
+					name: "_btn_",
+					align: "left",
+					headerStyle: "width: 100px",
 				},
 			],
-		}
+			options: {
+				userType: [],
+			},
+		};
 	},
 	methods: {
-
+		getListUserType() {
+			this.$axios({
+				method: "get",
+				url: "userType",
+			}).then(({ data }) => {
+				this.options.userType = data;
+			});
+		},
 	},
-})
+	mounted() {
+		this.getListUserType();
+	},
+});
 </script>
 
 <style>
-
 </style>

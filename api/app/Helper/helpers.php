@@ -4,8 +4,8 @@
 
 use Illuminate\Support\Facades\Validator;
 
-function hasInvalidRulesModel($modelClass, $data) {
-	$validator = Validator::make($data, $modelClass::$rules);
+function hasInvalidRulesModel($rules, $data) {
+	$validator = Validator::make($data, $rules);
 
 	if ($validator->fails()) {
 		return response()->json([ 'errors' => $validator->errors()->all() ], 422);

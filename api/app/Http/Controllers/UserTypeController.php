@@ -16,7 +16,11 @@ class UserTypeController extends Controller
 	{
 		Gate::forUser($request['payload'])->authorize('userType-viewAny');
 
-		$model = UserTypeModel::where('level', '!=', '101');
+		$model = UserTypeModel::query();
+
+		if ($request['payload']->user->level != 101) {
+			$model->where('level', '!=', '101');
+		}
 
 		if ($request->header('gpModelParams')) {
 			$gpModelParams = json_decode($request->header('gpModelParams'));
@@ -42,7 +46,7 @@ class UserTypeController extends Controller
 
 		$data = $request->all();
 
-		if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::class, $data)) {
+		if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::$rules, $data)) {
 			return $hasInvalidRules;
 		}
 
@@ -88,7 +92,7 @@ class UserTypeController extends Controller
 
 			$data = $request->all();
 
-			if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::class, $data)) {
+			if ($hasInvalidRules = hasInvalidRulesModel(UserTypeModel::$rules, $data)) {
 				return $hasInvalidRules;
 			}
 
