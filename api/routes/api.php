@@ -27,6 +27,8 @@ Route::group([ 'middleware' => 'JWTApi' ], function () {
 		return null;
 	});
 
+	Route::get('paginate/{keyModel}', 'Controller@paginate')->name('paginate');
+
 	Route::apiResource('userType', 'UserTypeController');
 	Route::patch('userType/{userType}/restore', 'UserTypeController@restore')->name('userType.restore');
 

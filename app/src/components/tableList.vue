@@ -3,8 +3,17 @@
 		<q-table
 			row-key="id"
 			separator="cell"
+			no-data-label="Nenhum registro encontrado"
+			no-results-label="O filtro não encontrou nenhum resultado"
+			class="my-sticky-virtscroll-table"
+			virtual-scroll
 			:data="dataList"
 			:columns="columns"
+			:loading="loadingTable"
+			:rows-per-page-options="[0]"
+			:virtual-scroll-sticky-size-start="48"
+			:pagination.sync="pagination"
+			@virtual-scroll="onScrollTable"
 		>
 			<template v-slot:top>
 				<div class="col-10 q-table__title">{{ title }}</div>
@@ -103,6 +112,10 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			loadingTable: false,
+			pagination: {
+				rowsPerPage: 0
+			},
 			showDialogForm: false,
 			dataDialogConfirm: {
 				show: false,
@@ -126,17 +139,19 @@ export default defineComponent({
 			}
 		},
 		getDataList() {
+			this.loadingTable = true
 			this.$axios({
 				method: 'get',
-				url: this.domain,
+				url: `paginate/${this.domain}`,
 				headers: {
 					gpModelParams: JSON.stringify({
 						withTrashed: 1,
 					}),
 				},
-			}).then((resp: AxiosResponse) => {
-				this.dataList = resp.data
+			}).then(({ data }: AxiosResponse) => {
+				this.dataList = data.data
 			}).catch(console.warn)
+			.then(() => this.loadingTable = false)
 		},
 		onSubmit() {
 			this.$axios({
@@ -214,6 +229,9 @@ export default defineComponent({
 
 			return dataCurrent
 		},
+		onScrollTable({ to, ref }) {
+			console.log({ to, ref })
+		},
 	},
 	mounted() {
 		this.getDataList()
@@ -221,6 +239,27 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
+.my-sticky-virtscroll-table {
+	height: calc(100vh - 70px);
 
+	.q-table__top,
+	.q-table__bottom,
+	thead tr:first-child th {
+		background-color: #eee;
+	}
+
+	thead tr th {
+		position: sticky;
+		z-index: 1;
+	}
+
+	thead tr:last-child th {
+		top: 48px;
+	}
+
+	thead tr:first-child th {
+		top: 0
+	}
+}
 </style>

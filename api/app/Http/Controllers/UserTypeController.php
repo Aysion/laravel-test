@@ -14,13 +14,9 @@ class UserTypeController extends Controller
 	*/
 	public function index(Request $request)
 	{
-		Gate::forUser($request['payload'])->authorize('userType-viewAny');
+		$model = new UserTypeModel;
 
-		$model = UserTypeModel::query();
-
-		if ($request['payload']->user->level != 101) {
-			$model->where('level', '!=', '101');
-		}
+		Gate::forUser($request['payload'])->authorize('userType-viewAny', $model);
 
 		if ($request->header('gpModelParams')) {
 			$gpModelParams = json_decode($request->header('gpModelParams'));

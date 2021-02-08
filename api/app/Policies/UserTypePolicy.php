@@ -11,41 +11,50 @@ class UserTypePolicy
 	use HandlesAuthorization;
 
 	public function before($payload, $action) {
-		return in_array($payload->user->level, [101, 1]);
+		if ($payload->user->level == 101) {
+			return true;
+		} elseif ($payload->user->level == 1) {
+			return null;
+		} else {
+			return true;
+		}
 	}
 
-	public function viewAny($payload)
+	public function viewAny($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		$userTypeModel->where('level', '!=', '101');
+
+		echo ($userTypeModel->name);
+		return true;
 	}
 
 	public function view($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		return true;
 	}
 
 	public function create($payload)
 	{
-		return false;
+		return true;
 	}
 
 	public function update($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		return true;
 	}
 
 	public function delete($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		return true;
 	}
 
 	public function restore($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		return true;
 	}
 
 	public function forceDelete($payload, UserTypeModel $userTypeModel)
 	{
-		return false;
+		return true;
 	}
 }

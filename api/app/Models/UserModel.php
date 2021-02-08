@@ -56,7 +56,11 @@ class UserModel extends Authenticatable
 	];
 
 	protected function getUserTypeAttribute() {
-		return UserTypeModel::find($this->attributes['user_type_id']);
+		if (isset($this->attributes['user_type_id'])) {
+			return UserTypeModel::find($this->attributes['user_type_id']);
+		}
+
+		return null;
 	}
 
 	protected function setPasswordAttribute($value) {

@@ -39,6 +39,8 @@ class Handler extends ExceptionHandler
 				switch ($statusCode) {
 					case 403: $msg = 'Esta ação não é autorizada.';
 						break;
+					case 404: $msg = 'Página não encontrada.';
+						break;
 					default: $msg = $e->getMessage();
 						break;
 				}
