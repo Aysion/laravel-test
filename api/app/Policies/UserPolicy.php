@@ -10,17 +10,29 @@ class UserPolicy
 	use HandlesAuthorization;
 
 	public function before($payload, $action) {
-		return in_array($payload->user->level, [101, 1]) ? true : null;
+		if ($payload->user->level == 101) {
+			return true;
+		} else {
+			return null;
+		}
 	}
 
-	public function viewAny($payload)
+	public function viewAny($payload, $model)
 	{
-		return false;
+		$model->whereHas('userType', function($query) {
+			$query->where('level', '!=', '101');
+		});
+
+		if ($payload->user->level != 1) {
+			$model->where('id', $payload->user->id)->orWhere('user_id', $payload->user->id);
+		}
+
+		return true;
 	}
 
-	public function view($payload, UserModel $userModel)
+	public function view($payload, $model)
 	{
-		return $userModel->id == $payload->user->id || $userModel->user_id == $payload->user->id;
+		return $model->id == $payload->user->id || $model->user_id == $payload->user->id;
 	}
 
 	public function create($payload)
@@ -28,17 +40,17 @@ class UserPolicy
 		return false;
 	}
 
-	public function update($payload, UserModel $userModel)
+	public function update($payload, $model)
 	{
 		return false;
 	}
 
-	public function delete($payload, UserModel $userModel)
+	public function delete($payload, $model)
 	{
 		return false;
 	}
 
-	public function restore($payload, UserModel $userModel)
+	public function restore($payload, $model)
 	{
 		return false;
 	}

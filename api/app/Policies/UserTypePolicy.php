@@ -16,19 +16,18 @@ class UserTypePolicy
 		} elseif ($payload->user->level == 1) {
 			return null;
 		} else {
-			return true;
+			return false;
 		}
 	}
 
-	public function viewAny($payload, UserTypeModel $userTypeModel)
+	public function viewAny($payload, $model)
 	{
-		$userTypeModel->where('level', '!=', '101');
+		$model->where('level', '!=', '101');
 
-		echo ($userTypeModel->name);
 		return true;
 	}
 
-	public function view($payload, UserTypeModel $userTypeModel)
+	public function view($payload, $model)
 	{
 		return true;
 	}
@@ -38,22 +37,22 @@ class UserTypePolicy
 		return true;
 	}
 
-	public function update($payload, UserTypeModel $userTypeModel)
+	public function update($payload, $model)
 	{
 		return true;
 	}
 
-	public function delete($payload, UserTypeModel $userTypeModel)
+	public function delete($payload, $model)
 	{
 		return true;
 	}
 
-	public function restore($payload, UserTypeModel $userTypeModel)
+	public function restore($payload, $model)
 	{
 		return true;
 	}
 
-	public function forceDelete($payload, UserTypeModel $userTypeModel)
+	public function forceDelete($payload, $model)
 	{
 		return true;
 	}

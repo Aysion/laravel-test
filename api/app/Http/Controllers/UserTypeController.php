@@ -7,27 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 class UserTypeController extends Controller
 {
-	/**
-	* Display a listing of the resource.
-	*
-	* @return \Illuminate\Http\Response
-	*/
-	public function index(Request $request)
-	{
-		$model = new UserTypeModel;
 
-		Gate::forUser($request['payload'])->authorize('userType-viewAny', $model);
-
-		if ($request->header('gpModelParams')) {
-			$gpModelParams = json_decode($request->header('gpModelParams'));
-
-			if ($gpModelParams->withTrashed) {
-				$model->withTrashed();
-			}
-
-		}
-
-		return $model->get();
+	function __construct() {
+		$this->key = 'userType';
+		$this->model = UserTypeModel::query();
 	}
 
 	/**

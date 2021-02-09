@@ -9,26 +9,9 @@ use Illuminate\Support\Facades\Gate;
 class UserController extends Controller
 {
 
-	/**
-	* Display a listing of the resource.
-	*
-	* @return \Illuminate\Http\Response
-	*/
-	public function index(Request $request)
-	{
-		$model = UserModel::query();
-
-		if ($request['payload']->user->level != 101) {
-			$model->whereHas('userType', function($query) {
-				$query->where('level', '!=', '101');
-			});
-		}
-
-		if (Gate::forUser($request['payload'])->denies('user-viewAny')) {
-			$model->where('id', $request['payload']->user->id)->orWhere('user_id', $request['payload']->user->id);
-		}
-
-		return $model->get();
+	function __construct() {
+		$this->key = 'user';
+		$this->model = UserModel::query();
 	}
 
 	/**

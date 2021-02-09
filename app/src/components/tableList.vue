@@ -220,7 +220,7 @@ export default defineComponent({
 			for (let i = 0; i < fieldPath.length; i++) {
 				const fieldCurrent = fieldPath[i]
 
-				if (dataCurrent.hasOwnProperty(fieldCurrent)) {
+				if (dataCurrent && dataCurrent.hasOwnProperty(fieldCurrent)) {
 					dataCurrent = dataCurrent[fieldCurrent]
 				} else {
 					break

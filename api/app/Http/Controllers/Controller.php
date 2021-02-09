@@ -13,21 +13,50 @@ class Controller extends BaseController
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+	function __construct() {
+		$this->key = '';
+		$this->model = null;
+	}
+
+	/**
+	 * The method is called directly by the router,
+	 * never called by another child controller
+	 */
 	public function paginate(Request $request, $keyModel) {
 		$pathModel = '\App\Models\\' . ucfirst($keyModel) . 'Model';
-		$model = new $pathModel;
 
-		Gate::forUser($request['payload'])->authorize("{$keyModel}-viewAny", $model);
+		$this->model = $pathModel::query();
+		$this->key = $keyModel;
 
+		Gate::forUser($request['payload'])->authorize("{$keyModel}-viewAny", [ $this->model ]);
+
+		$this->generateGpModelParams($request);
+
+		return $this->model->simplePaginate(30)->withPath("/api/paginate/{$keyModel}");
+	}
+
+	/**
+	* Display a listing of the resource.
+	*
+	* @return \Illuminate\Http\Response
+	*/
+	public function index(Request $request)
+	{
+		Gate::forUser($request['payload'])->authorize("{$this->key}-viewAny", [ $this->model ]);
+
+		$this->generateGpModelParams($request);
+
+		return $this->model->get();
+	}
+
+	protected function generateGpModelParams(Request $request) {
 		if ($request->header('gpModelParams')) {
 			$gpModelParams = json_decode($request->header('gpModelParams'));
 
 			if ($gpModelParams->withTrashed) {
-				$model->withTrashed();
+				$this->model->withTrashed();
 			}
 
 		}
-
-		return $model->simplePaginate(3)->withPath("/api/paginate/{$keyModel}");
 	}
 }
