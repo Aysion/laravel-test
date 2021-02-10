@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\UserModel;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -10,11 +9,7 @@ class UserPolicy
 	use HandlesAuthorization;
 
 	public function before($payload, $action) {
-		if ($payload->user->level == 101) {
-			return true;
-		} else {
-			return null;
-		}
+		return in_array($action, [ 'userType-viewAny' ]) ? null : ($payload->user->level == 1 ? true : null);
 	}
 
 	public function viewAny($payload, $model)
@@ -37,21 +32,21 @@ class UserPolicy
 
 	public function create($payload)
 	{
-		return false;
+		return true;
 	}
 
 	public function update($payload, $model)
 	{
-		return false;
+		return $model->id == $payload->user->id || $model->user_id == $payload->user->id;
 	}
 
 	public function delete($payload, $model)
 	{
-		return false;
+		return $model->user_id == $payload->user->id;
 	}
 
 	public function restore($payload, $model)
 	{
-		return false;
+		return $model->id == $payload->user->id || $model->user_id == $payload->user->id;
 	}
 }

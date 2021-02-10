@@ -29,14 +29,21 @@ class AuthController extends Controller {
 		$userData = UserModel::where('email', $input['email'])->first();
 
 		if ($userData && Hash::check($input['password'], $userData->makeVisible(['password'])->password)) {
-			return (new JWTHelper())->build([
+			$dataPayload = [
 				'user' => [
 					'id' => $userData->id,
 					'userType' => $userData->userType->id,
 					'level' => $userData->userType->level,
 					'company' => 1,
 				],
-			]);
+			];
+
+			$token = (new JWTHelper())->build($dataPayload);
+
+			return [
+				'token' => $token,
+				'dataPayload' => $dataPayload,
+			];
 		}
 
 		return response()->json([ 'errors' => ['E-mail ou Senha inválido'] ], 406);

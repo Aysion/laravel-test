@@ -25,6 +25,10 @@ class AuthServiceProvider extends ServiceProvider
 	{
 		$this->registerPolicies();
 
+		Gate::before(function($payload) {
+			return $payload->user->level == 101 ? true : null;
+		});
+
 		$mapsPolicy = [
 			[ 'user', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
 			[ 'userType', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],

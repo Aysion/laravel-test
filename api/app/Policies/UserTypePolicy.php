@@ -2,22 +2,14 @@
 
 namespace App\Policies;
 
-use App\Models\UserTypeModel;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Request;
 
 class UserTypePolicy
 {
 	use HandlesAuthorization;
 
-	public function before($payload, $action) {
-		if ($payload->user->level == 101) {
-			return true;
-		} elseif ($payload->user->level == 1) {
-			return null;
-		} else {
-			return false;
-		}
+	public function before($payload) {
+		return $payload->user->level == 1 ? null : false;
 	}
 
 	public function viewAny($payload, $model)

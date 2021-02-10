@@ -15,7 +15,15 @@
 					Quasar App
 				</q-toolbar-title>
 
-				<div>Quasar v{{ $q.version }}</div>
+				<q-btn
+					flat
+					dense
+					round
+					icon="logout"
+					aria-label="Sair"
+					title="Sair"
+					@click="logout"
+				/>
 			</q-toolbar>
 		</q-header>
 
@@ -74,6 +82,13 @@ export default defineComponent({
 		const essentialLinks = ref(linksData)
 
 		return { leftDrawerOpen, essentialLinks }
-	}
+	},
+	methods: {
+		logout() {
+			this.$q.localStorage.remove('gpToken')
+			this.$q.sessionStorage.remove('gpToken')
+			this.$router.push({ name: 'login' })
+		}
+	},
 })
 </script>

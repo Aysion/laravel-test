@@ -50,12 +50,10 @@ export default defineComponent({
 				method: 'post',
 				url: 'auth',
 				data: this.login,
-			}).then((resp: AxiosResponse) => {
-				this.$q[this.keepConnected ? 'localStorage' : 'sessionStorage'].set('gpToken', resp.data)
-
+			}).then(({ data }: AxiosResponse) => {
+				this.$q[this.keepConnected ? 'localStorage' : 'sessionStorage'].set('gpToken', data.token)
+				this.$q.localStorage.set('dataPayload', data.dataPayload)
 				this.$router.push({ name: 'home' })
-
-				return resp
 			}).catch(console.warn)
 		}
 	},

@@ -16,7 +16,7 @@
 					option-value="id"
 					option-label="name"
 					v-model="slotProps.formData.user_type_id"
-					:options="options.userType"
+					:options="options.userType.length ? options.userType : [slotProps.formData.userType]"
 					emit-value
 					map-options
 					filled
@@ -46,6 +46,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			dataPayload: null,
 			dataList: [],
 			columns: [
 				{
@@ -98,7 +99,11 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		this.getListUserType();
+		this.dataPayload = this.$q.localStorage.getItem('dataPayload')
+
+		if (this.dataPayload.user.level == 1) {
+			this.getListUserType();
+		}
 	},
 });
 </script>
