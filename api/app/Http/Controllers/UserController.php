@@ -11,6 +11,7 @@ class UserController extends Controller
 
 	function __construct() {
 		$this->key = 'user';
+		$this->label = 'Usuário';
 		$this->model = UserModel::class;
 	}
 
@@ -39,23 +40,6 @@ class UserController extends Controller
 		$userType->fill($data)->save();
 
 		return $userType;
-	}
-
-	/**
-	* Display the specified resource.
-	*
-	* @param  int  $id
-	* @return \Illuminate\Http\Response
-	*/
-	public function show(Request $request, $id)
-	{
-		if ($user = UserModel::find($id)) {
-			Gate::forUser($request['payload'])->authorize('user-view', $user);
-
-			return $user;
-		}
-
-		return response()->json([ 'errors' => ['Usuário não existente ou desativado'] ], 410);
 	}
 
 	/**
@@ -90,35 +74,4 @@ class UserController extends Controller
 		return response()->json([ 'errors' => ['Usuário não existente ou desativado'] ], 410);
 	}
 
-	/**
-	* Remove the specified resource from storage.
-	*
-	* @param  int  $id
-	* @return \Illuminate\Http\Response
-	*/
-	public function destroy(Request $request, $id)
-	{
-		if ($user = UserModel::find($id)) {
-			Gate::forUser($request['payload'])->authorize('user-delete', $user);
-
-			$user->delete();
-
-			return $user;
-		}
-
-		return response()->json([ 'errors' => ['Usuário não existente ou já desativado'] ], 410);
-	}
-
-	public function restore(Request $request, $id)
-	{
-		if ($user = UserModel::withTrashed()->find($id)) {
-			Gate::forUser($request['payload'])->authorize('user-restore', $user);
-
-			$user->restore();
-
-			return $user;
-		}
-
-		return response()->json([ 'errors' => ['Usuário não existente'] ], 410);
-	}
 }

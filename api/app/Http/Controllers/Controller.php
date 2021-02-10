@@ -24,21 +24,16 @@ class Controller extends BaseController {
 	public function paginate(Request $request, $keyModel) {
 		$pathModel = '\App\Models\\' . ucfirst($keyModel) . 'Model';
 
-		// return (new $pathModel())->where('level', '!=', '101')->get();
-
 		$this->model = new $pathModel;
 		$this->key = $keyModel;
+		$modelBuilder = $this->model::query();
 
-		// Gate::forUser($request['payload'])->authorize("{$keyModel}-viewAny", [ $this->model ]);
+		Gate::forUser($request['payload'])->authorize("{$keyModel}-viewAny", [ $modelBuilder ]);
 
-		// $this->generateGpModelParams($request);
+		$this->generateGpModelParams($request);
 
-		$this->model->where('level', '!=', '101');
-		return $this->model->get();
-
-		return $this->model->simplePaginate(30)->withPath("/api/paginate/{$keyModel}");
+		return $modelBuilder->simplePaginate(30)->withPath("/api/paginate/{$keyModel}");
 	}
-
 
 	protected function generateGpModelParams(Request $request) {
 		if ($request->header('gpModelParams')) {
@@ -57,13 +52,13 @@ class Controller extends BaseController {
 	* @return \Illuminate\Http\Response
 	*/
 	public function index(Request $request) {
-		print_r($this->model::query()->get());die;
+		$model = $this->model::query();
 
-		Gate::forUser($request['payload'])->authorize("{$this->key}-viewAny", [ $this->model ]);
+		Gate::forUser($request['payload'])->authorize("{$this->key}-viewAny", [ $model ]);
 
 		$this->generateGpModelParams($request);
 
-		return $this->model->get();
+		return $model->get();
 	}
 
 	/**
@@ -81,7 +76,7 @@ class Controller extends BaseController {
 			return $hasInvalidRules;
 		}
 
-		$model = new $this->model;
+		$model = $this->model::query();
 
 		$model->fill($data)->save();
 

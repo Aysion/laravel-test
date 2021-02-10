@@ -3,12 +3,13 @@
 namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserTypePolicy
 {
 	use HandlesAuthorization;
 
-	public function before($payload, $action) {
+	public function before($payload,$action) {
 		switch ($payload->user->level) {
 			case 1: return null;
 			case 2: return $action == 'userType-viewAny' ? null : false;
@@ -16,7 +17,7 @@ class UserTypePolicy
 		}
 	}
 
-	public function viewAny($payload, $model)
+	public function viewAny($payload, Builder $model)
 	{
 		$model->where('level', '!=', '101');
 
@@ -27,7 +28,7 @@ class UserTypePolicy
 		return true;
 	}
 
-	public function view($payload, $model)
+	public function view($payload, Builder $model)
 	{
 		return true;
 	}
@@ -37,22 +38,22 @@ class UserTypePolicy
 		return true;
 	}
 
-	public function update($payload, $model)
+	public function update($payload, Builder $model)
 	{
 		return true;
 	}
 
-	public function delete($payload, $model)
+	public function delete($payload, Builder $model)
 	{
 		return true;
 	}
 
-	public function restore($payload, $model)
+	public function restore($payload, Builder $model)
 	{
 		return true;
 	}
 
-	public function forceDelete($payload, $model)
+	public function forceDelete($payload, Builder $model)
 	{
 		return true;
 	}
