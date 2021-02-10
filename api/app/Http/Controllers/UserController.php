@@ -11,7 +11,7 @@ class UserController extends Controller
 
 	function __construct() {
 		$this->key = 'user';
-		$this->model = UserModel::query();
+		$this->model = UserModel::class;
 	}
 
 	/**

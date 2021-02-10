@@ -8,13 +8,21 @@ class UserTypePolicy
 {
 	use HandlesAuthorization;
 
-	public function before($payload) {
-		return $payload->user->level == 1 ? null : false;
+	public function before($payload, $action) {
+		switch ($payload->user->level) {
+			case 1: return null;
+			case 2: return $action == 'userType-viewAny' ? null : false;
+			default: return false;
+		}
 	}
 
 	public function viewAny($payload, $model)
 	{
 		$model->where('level', '!=', '101');
+
+		if ($payload->user->level != 1) {
+			$model->whereNotIn('level', [ 1, 2 ]);
+		}
 
 		return true;
 	}
