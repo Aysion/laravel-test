@@ -7,12 +7,13 @@
 			no-results-label="O filtro não encontrou nenhum resultado"
 			class="my-sticky-virtscroll-table"
 			virtual-scroll
-			:data="dataList"
+			:data="tableList.data"
 			:columns="columns"
-			:loading="loadingTable"
+			:loading="tableList.loading"
 			:rows-per-page-options="[0]"
-			:virtual-scroll-sticky-size-start="48"
-			:pagination.sync="pagination"
+			:virtual-scroll-item-size="48"
+      :virtual-scroll-sticky-size-start="48"
+			:pagination.sync="tableList.pagination"
 			@virtual-scroll="onScrollTable"
 		>
 			<template v-slot:top>
@@ -112,9 +113,15 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			loadingTable: false,
-			pagination: {
-				rowsPerPage: 0
+			tableList: {
+				loading: false,
+				pagination: {
+					rowsPerPage: 0,
+					rowsNumber: 0,
+				},
+				data: [],
+				scope: null,
+				paginateOpts: {},
 			},
 			showDialogForm: false,
 			dataDialogConfirm: {
@@ -122,8 +129,6 @@ export default defineComponent({
 				body: '',
 			},
 			formData: {},
-			scopeTable: null,
-			dataList: [],
 		}
 	},
 	methods: {
@@ -131,27 +136,35 @@ export default defineComponent({
 			this.showDialogForm = true
 
 			if (scopeTable) {
-				this.scopeTable = scopeTable
+				this.tableList.scopeTable = scopeTable
 				this.formData = JSON.parse(JSON.stringify(scopeTable.row))
 			} else {
-				this.scopeTable = null
+				this.tableList.scopeTable = null
 				this.formData = {}
 			}
 		},
-		getDataList() {
-			this.loadingTable = true
+		getDataList({ page }) {
+			this.tableList.loading = true
 			this.$axios({
 				method: 'get',
 				url: `paginate/${this.domain}`,
+				params: {
+					page,
+				},
 				headers: {
 					gpModelParams: JSON.stringify({
 						withTrashed: 1,
 					}),
 				},
 			}).then(({ data }: AxiosResponse) => {
-				this.dataList = data.data
+				this.tableList.data = data.data
+				this.tableList.paginateOpts = data
+				delete this.tableList.paginateOpts.data
+
+				this.tableList.pagination.rowsNumber = this.tableList.paginateOpts.to
+
 			}).catch(console.warn)
-			.then(() => this.loadingTable = false)
+			.then(() => this.tableList.loading = false)
 		},
 		onSubmit() {
 			this.$axios({
@@ -159,7 +172,7 @@ export default defineComponent({
 				url: `${this.domain}/${(this.formData.id || '')}`,
 				data: this.formData,
 			}).then((resp: AxiosResponse) => {
-				this.$set(this.dataList, (this.scopeTable ? this.scopeTable.rowIndex : this.dataList.length), resp.data)
+				this.$set(this.tableList.data, (this.tableList.scopeTable ? this.tableList.scopeTable.rowIndex : this.tableList.data.length), resp.data)
 
 				this.$q.notify({
 					type: 'positive',
@@ -177,9 +190,9 @@ export default defineComponent({
 						url: `${this.domain}/${scopeTable.row.id}`,
 					}).then((resp: AxiosResponse) => {
 						if (resp.data) {
-							this.$set(this.dataList, scopeTable.rowIndex, resp.data)
+							this.$set(this.tableList.data, scopeTable.rowIndex, resp.data)
 						} else {
-							this.$delete(this.dataList, scopeTable.rowIndex)
+							this.$delete(this.tableList.data, scopeTable.rowIndex)
 						}
 
 						this.$q.notify({
@@ -199,7 +212,7 @@ export default defineComponent({
 						method: 'patch',
 						url: `${this.domain}/${scopeTable.row.id}/restore`,
 					}).then((resp: AxiosResponse) => {
-						this.$set(this.dataList, scopeTable.rowIndex, resp.data)
+						this.$set(this.tableList.data, scopeTable.rowIndex, resp.data)
 
 						this.$q.notify({
 							type: 'positive',
@@ -230,11 +243,16 @@ export default defineComponent({
 			return dataCurrent
 		},
 		onScrollTable({ to, ref }) {
-			console.log({ to, ref })
+			console.log(!this.tableList.loading, to, this.tableList.data.length - 1);
+
+			if (!this.tableList.loading && to === (this.tableList.data.length - 1)) {
+				let nextPage = this.tableList.paginateOpts.current_page + 1
+				this.getDataList({ page: nextPage })
+			}
 		},
 	},
 	mounted() {
-		this.getDataList()
+		this.getDataList({ page: 1 })
 	}
 })
 </script>

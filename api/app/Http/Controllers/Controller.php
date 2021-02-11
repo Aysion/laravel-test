@@ -32,7 +32,7 @@ class Controller extends BaseController {
 
 		$this->generateGpModelParams($request);
 
-		return $modelBuilder->simplePaginate(30)->withPath("/api/paginate/{$keyModel}");
+		return $modelBuilder->simplePaginate(100)->withPath("/api/paginate/{$keyModel}");
 	}
 
 	protected function generateGpModelParams(Request $request) {

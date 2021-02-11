@@ -65,7 +65,7 @@ export default defineComponent({
 				},
 				{
 					name: "name",
-					label: "Tipo",
+					label: "Nome",
 					field: "name",
 					align: "left",
 					sortable: true,
