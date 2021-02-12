@@ -114,6 +114,7 @@ export default defineComponent({
 	data() {
 		return {
 			tableList: {
+				makeGetNextPage: true,
 				loading: false,
 				pagination: {
 					rowsPerPage: 0,
@@ -157,7 +158,10 @@ export default defineComponent({
 					}),
 				},
 			}).then(({ data }: AxiosResponse) => {
-				this.tableList.data = data.data
+				this.tableList.makeGetNextPage = data.data.length === 100
+
+				this.tableList.data = this.tableList.data.concat(data.data)
+
 				this.tableList.paginateOpts = data
 				delete this.tableList.paginateOpts.data
 
@@ -243,11 +247,10 @@ export default defineComponent({
 			return dataCurrent
 		},
 		onScrollTable({ to, ref }) {
-			console.log(!this.tableList.loading, to, this.tableList.data.length - 1);
+			const { makeGetNextPage, loading, data, paginateOpts } = this.tableList
 
-			if (!this.tableList.loading && to === (this.tableList.data.length - 1)) {
-				let nextPage = this.tableList.paginateOpts.current_page + 1
-				this.getDataList({ page: nextPage })
+			if (!loading && makeGetNextPage && to === (data.length - 1)) {
+				this.getDataList({ page: (paginateOpts.current_page + 1) })
 			}
 		},
 	},
