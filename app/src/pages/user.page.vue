@@ -46,7 +46,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			dataPayload: null,
+			dataPayload: {},
 			dataList: [],
 			columns: [
 				{
@@ -99,7 +99,7 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		this.dataPayload = this.$q.localStorage.getItem('dataPayload')
+		// this.dataPayload = this.$q.localStorage.getItem('dataPayload')
 
 		this.getListUserType();
 	},

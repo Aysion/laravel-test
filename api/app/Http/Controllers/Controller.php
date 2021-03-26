@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Gate;
 class Controller extends BaseController {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-	// function __construct() {
-	// 	$this->key = '';
-	// 	$this->model = null;
-	// }
-
 	/**
 	 * The method is called directly by the router,
 	 * never called by another child controller

@@ -32,6 +32,7 @@ class AuthServiceProvider extends ServiceProvider
 		$mapsPolicy = [
 			[ 'user', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
 			[ 'userType', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
+			[ 'configPage', ['viewAny', 'create', 'view', 'update', 'delete', 'restore'] ],
 		];
 
 		foreach ($mapsPolicy as $mapPolicy) {

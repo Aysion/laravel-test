@@ -122,6 +122,7 @@ export default defineComponent({
 				},
 				data: [],
 				scope: null,
+				scopeTable: null,
 				paginateOpts: {},
 			},
 			showDialogForm: false,
@@ -166,9 +167,8 @@ export default defineComponent({
 				delete this.tableList.paginateOpts.data
 
 				this.tableList.pagination.rowsNumber = this.tableList.paginateOpts.to
-
 			}).catch(console.warn)
-			.then(() => this.tableList.loading = false)
+				.then(() => this.tableList.loading = false)
 		},
 		onSubmit() {
 			this.$axios({
@@ -246,7 +246,7 @@ export default defineComponent({
 
 			return dataCurrent
 		},
-		onScrollTable({ to, ref }) {
+		onScrollTable({ to }) {
 			const { makeGetNextPage, loading, data, paginateOpts } = this.tableList
 
 			if (!loading && makeGetNextPage && to === (data.length - 1)) {

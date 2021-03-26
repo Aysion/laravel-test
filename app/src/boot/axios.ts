@@ -8,11 +8,11 @@ declare module 'vue/types/vue' {
 	}
 }
 
-const axiosInstance = axios.create({
+const axiosAPI = axios.create({
 	baseURL: 'http://127.0.0.1:8000/api'
 })
 
-axiosInstance.interceptors.request.use(function (config) {
+axiosAPI.interceptors.request.use(function (config) {
 	const gpToken = SessionStorage.getItem('gpToken') || LocalStorage.getItem('gpToken')
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -24,7 +24,7 @@ axiosInstance.interceptors.request.use(function (config) {
 	return Promise.reject(error);
 })
 
-axiosInstance.interceptors.response.use(function (response: AxiosResponse) {
+axiosAPI.interceptors.response.use(function (response: AxiosResponse) {
 	const { data }: { data: { errors: Array<string> } } = response
 
 	if (data.errors) {
@@ -60,5 +60,7 @@ axiosInstance.interceptors.response.use(function (response: AxiosResponse) {
 
 export default boot(({ Vue }) => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-	Vue.prototype.$axios = axiosInstance
+	Vue.prototype.$axios = axiosAPI
 })
+
+export { axiosAPI }

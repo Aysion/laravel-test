@@ -57,31 +57,16 @@
 <script lang="ts">
 import EssentialLink from '../components/EssentialLink.vue'
 
-const linksData = [
-	{
-		title: 'Tipo de Usuário',
-		caption: '',
-		icon: 'school',
-		link: '/userType'
-	},
-	{
-		title: 'Usuário',
-		caption: '',
-		icon: 'school',
-		link: '/user'
-	},
-]
-
 import { defineComponent, ref } from '@vue/composition-api'
 
 export default defineComponent({
 	name: 'MainLayout',
 	components: { EssentialLink },
-	setup () {
-		const leftDrawerOpen = ref(false)
-		const essentialLinks = ref(linksData)
-
-		return { leftDrawerOpen, essentialLinks }
+	data() {
+		return {
+			leftDrawerOpen: false,
+			essentialLinks: [],
+		}
 	},
 	methods: {
 		logout() {
@@ -90,5 +75,8 @@ export default defineComponent({
 			this.$router.push({ name: 'login' })
 		}
 	},
+	async mounted() {
+		this.essentialLinks = await this.$store.dispatch('api/list', { key: 'configMenu' })
+	}
 })
 </script>

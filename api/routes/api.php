@@ -1,10 +1,6 @@
 <?php
 
-use App\Models\UserModel;
 use Illuminate\Support\Facades\Route;
-use Jose\Component\Core\JWK;
-use Jose\Component\Core\JWT;
-use Jose\Easy\Build;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +30,7 @@ Route::group([ 'middleware' => 'JWTApi' ], function () {
 
 	Route::apiResource('user', 'UserController');
 	Route::patch('user/{user}/restore', 'UserController@restore')->name('user.restore');
+
+	Route::apiResource('configPage', 'ConfigPageController');
 
 });
