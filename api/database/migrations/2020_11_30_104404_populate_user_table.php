@@ -19,45 +19,6 @@ class PopulateUserTable extends Migration
 			'password' => Hash::make('123'),
 			'user_type_id' => 1,
 		]);
-
-		DB::table('user')->updateOrInsert(['id' => 2], [
-			'name' => 'Thalia - Diretor',
-			'email' => 'diretor@email.com',
-			'password' => Hash::make('123'),
-			'user_type_id' => 2,
-		]);
-
-		DB::table('user')->updateOrInsert(['id' => 3], [
-			'name' => 'Ana - Gerente',
-			'email' => 'gerente@email.com',
-			'password' => Hash::make('123'),
-			'user_type_id' => 3,
-			'user_id' => 2,
-		]);
-
-		DB::table('user')->updateOrInsert(['id' => 4], [
-			'name' => 'Paula - Gerente',
-			'email' => 'gerente2@email.com',
-			'password' => Hash::make('123'),
-			'user_type_id' => 3,
-			'user_id' => 2,
-		]);
-
-		DB::table('user')->updateOrInsert(['id' => 5], [
-			'name' => 'Maria - Vendedora',
-			'email' => 'vendedor@email.com',
-			'password' => Hash::make('123'),
-			'user_type_id' => 4,
-			'user_id' => 3,
-		]);
-
-		DB::table('user')->updateOrInsert(['id' => 6], [
-			'name' => 'Suzana - Vendedora',
-			'email' => 'vendedor2@email.com',
-			'password' => Hash::make('123'),
-			'user_type_id' => 4,
-			'user_id' => 4,
-		]);
 	}
 
 	/**

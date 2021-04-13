@@ -26,11 +26,14 @@ Route::group([ 'middleware' => 'JWTApi' ], function () {
 	Route::get('paginate/{keyModel}', 'Controller@paginate')->name('paginate');
 
 	Route::apiResource('userType', 'UserTypeController');
-	Route::patch('userType/{userType}/restore', 'UserTypeController@restore')->name('userType.restore');
+	Route::patch('userType/{id}/restore', 'UserTypeController@restore')->name('userType.restore');
 
 	Route::apiResource('user', 'UserController');
-	Route::patch('user/{user}/restore', 'UserController@restore')->name('user.restore');
+	Route::patch('user/{id}/restore', 'UserController@restore')->name('user.restore');
 
 	Route::apiResource('configPage', 'ConfigPageController');
+	Route::patch('configPage/{id}/restore', 'ConfigPageController@restore')->name('configPage.restore');
+
+	Route::apiResource('configMenu', 'ConfigMenuController');
 
 });

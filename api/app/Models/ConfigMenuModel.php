@@ -8,21 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ConfigMenuModel extends Model
 {
-	use HasFactory, SoftDeletes;
-
-	static public $rules = [
-		'name' => [ 'required', 'min:3', 'max:64' ],
-	];
+	static public $rules = [];
 
 	protected $table = 'config_menu';
 
 	protected $fillable = [
 		'user_type_id',
 		'user_id',
-		'name',
-		'title',
-		'subtitle',
-		'icon',
+		'config_page_id',
 	];
 
+	function configPage() {
+		return $this->hasOne('App\Models\ConfigPageModel', 'id', 'config_page_id');
+	}
 }

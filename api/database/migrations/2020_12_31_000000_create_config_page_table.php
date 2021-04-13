@@ -16,9 +16,6 @@ class CreateConfigPageTable extends Migration
 		Schema::create('config_page', function (Blueprint $table) {
 			$table->id();
 
-			// $table->foreignId('user_id')->constrained('user')->onDelete('cascade')->nullable();
-			// $table->foreignId('user_type_id')->constrained('user_type')->onDelete('cascade')->nullable();
-
 			$table->string('name', 32)->nullable();
 			$table->string('title', 32)->nullable();
 			$table->string('subtitle', 32)->nullable();
